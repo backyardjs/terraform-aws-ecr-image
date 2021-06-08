@@ -18,3 +18,8 @@ variable "aws_profile" {
   type        = string
   description = "profile"
 }
+
+variable "aws_region" {
+  type        = string
+  description = "region"
+}
