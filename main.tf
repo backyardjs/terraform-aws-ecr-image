@@ -10,6 +10,9 @@ data "external" "build_dir" {
   program = ["bash", "${path.module}/bin/dir_md5.sh", var.dockerfile_dir]
 }
 
+data "aws_caller_identity" "current" {}
+
+
 # Builds test-service and pushes it into aws_ecr_repository
 resource "null_resource" "ecr_image" {
   triggers = {
@@ -18,6 +21,6 @@ resource "null_resource" "ecr_image" {
 
   # Runs the build.sh script which builds the dockerfile and pushes to ecr
   provisioner "local-exec" {
-    command = "bash ${path.module}/bin/build.sh ${var.dockerfile_dir} ${var.ecr_repository_url}:${var.docker_image_tag} ${var.aws_profile} ${var.aws_region}"
+    command = "bash ${path.module}/bin/build.sh ${var.dockerfile_dir} ${var.ecr_repository_url}:${var.docker_image_tag} ${data.aws_caller_identity.current.id} ${var.aws_profile} ${var.aws_region}"
   }
 }
